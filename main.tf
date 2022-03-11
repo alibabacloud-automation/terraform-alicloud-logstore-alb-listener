@@ -13,14 +13,14 @@ resource "alicloud_log_store" "default" {
 }
 
 resource "alicloud_alb_load_balancer" "default" {
-  vpc_id                 = var.vpc_id
+  load_balancer_name     = var.load_balancer_name != "" ? var.load_balancer_name : var.name
   address_type           = var.alb_address_type
   address_allocated_mode = var.alb_address_allocated_mode
-  load_balancer_name     = var.name
   load_balancer_edition  = var.alb_balancer_edition
   resource_group_id      = var.resource_group_id
+  vpc_id                 = var.vpc_id
   load_balancer_billing_config {
-    pay_type = "PayAsYouGo"
+    pay_type = var.pay_type
   }
   zone_mappings {
     vswitch_id = var.vswtich_id_1
@@ -31,7 +31,7 @@ resource "alicloud_alb_load_balancer" "default" {
     zone_id    = var.zone_id_2
   }
   modification_protection_config {
-    status = "NonProtection"
+    status = var.status
   }
   access_log_config {
     log_project = alicloud_log_project.default.name
@@ -40,9 +40,9 @@ resource "alicloud_alb_load_balancer" "default" {
 }
 
 resource "alicloud_alb_server_group" "default" {
+  server_group_name = var.server_group_name != "" ? var.server_group_name : var.name
   protocol          = var.alb_server_group_protocol
   vpc_id            = var.vpc_id
-  server_group_name = var.name
   resource_group_id = var.resource_group_id
   health_check_config {
     health_check_enabled = var.alb_server_health_check_enable
