@@ -1,11 +1,11 @@
 resource "alicloud_log_project" "default" {
-  name        = var.name
-  description = var.log_store_description
+  project_name = var.name
+  description  = var.log_store_description
 }
 
 resource "alicloud_log_store" "default" {
-  project               = alicloud_log_project.default.name
-  name                  = var.name
+  project_name          = alicloud_log_project.default.project_name
+  logstore_name         = var.name
   shard_count           = var.log_store_shard_count
   auto_split            = var.log_auto_split
   max_split_shard_count = var.log_split_shard_count
@@ -34,8 +34,8 @@ resource "alicloud_alb_load_balancer" "default" {
     status = var.status
   }
   access_log_config {
-    log_project = alicloud_log_project.default.name
-    log_store   = alicloud_log_store.default.name
+    log_project = alicloud_log_project.default.project_name
+    log_store   = alicloud_log_store.default.logstore_name
   }
 }
 
